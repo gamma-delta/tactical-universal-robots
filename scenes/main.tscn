@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://tj1xjp8t7uf3"]
+
+[ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="2_eyywi"]
+[ext_resource type="Script" path="res://scripts/CtrlQQuit.gd" id="2_qfvl6"]
+[ext_resource type="Script" path="res://cs/controls/PlayerControllerEditorWidget.cs" id="3_fj6x3"]
+
+[node name="Main" type="Node2D"]
+
+[node name="CtrlQQuit" type="Node" parent="."]
+script = ExtResource("2_qfvl6")
+
+[node name="PlayerController" type="Node2D" parent="."]
+position = Vector2(16, 16)
+script = ExtResource("2_eyywi")
+
+[node name="PlayerControllerEditorWidget" type="Node2D" parent="PlayerController"]
+script = ExtResource("3_fj6x3")

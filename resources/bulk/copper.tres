@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="BulkResource" load_steps=3 format=3 uid="uid://os3h2s1e53n2"]
+
+[ext_resource type="Script" path="res://cs/items/BulkResource.cs" id="1_mqjtv"]
+[ext_resource type="Texture2D" uid="uid://6oknh2jbpqe8" path="res://textures/ingredients/copper.png" id="2_mma1l"]
+
+[resource]
+resource_name = "copper"
+script = ExtResource("1_mqjtv")
+texture = ExtResource("2_mma1l")

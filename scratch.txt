@@ -1,0 +1,29 @@
+PLAN is
+- Set $TARGET
+- Attack $TARGET
+  OR move towards $TARGET
+
+$TARGET is
+- last unit to damage this
+  OR closest hostile unit
+
+Violence inhibitor
+
+
+
+#########
+#       ######
+#   A        #
+#       #### #
+#+#####o#  #>#
+#@ # #  #  ###
+#### ####
+
+PLAN is
+[>] Set $TARGET
+[ ] Attack $TARGET
+
+$TARGET is
+- last unit to damage this
+  OR closest rebel unit outside of AREA(cell)
+
