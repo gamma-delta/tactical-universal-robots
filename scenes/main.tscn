@@ -1,17 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://tj1xjp8t7uf3"]
+[gd_scene load_steps=5 format=3 uid="uid://tj1xjp8t7uf3"]
 
 [ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="2_eyywi"]
 [ext_resource type="Script" path="res://scripts/CtrlQQuit.gd" id="2_qfvl6"]
-[ext_resource type="Script" path="res://cs/controls/PlayerControllerEditorWidget.cs" id="3_fj6x3"]
+[ext_resource type="Script" path="res://cs/grid/Grid.cs" id="3_yqbrg"]
+[ext_resource type="PackedScene" uid="uid://ct8p3v7mwgwj4" path="res://scenes/prefabs/Cell.tscn" id="4_fyu5t"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node3D"]
 
 [node name="CtrlQQuit" type="Node" parent="."]
 script = ExtResource("2_qfvl6")
 
-[node name="PlayerController" type="Node2D" parent="."]
-position = Vector2(16, 16)
+[node name="PlayerController" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 16, 0)
 script = ExtResource("2_eyywi")
 
-[node name="PlayerControllerEditorWidget" type="Node2D" parent="PlayerController"]
-script = ExtResource("3_fj6x3")
+[node name="Grid" type="Node3D" parent="."]
+script = ExtResource("3_yqbrg")
+Size = Vector2i(8, 8)
+CellPrefab = ExtResource("4_fyu5t")

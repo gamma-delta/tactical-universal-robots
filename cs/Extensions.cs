@@ -1,6 +1,9 @@
 namespace tur;
 
 using tur.grid;
+using System.Linq;
+using System.Collections.Generic;
+
 using Godot;
 
 public static class Extensions {
@@ -21,17 +24,15 @@ public static class Extensions {
     return LoadScene<T>("res://scenes/prefabs/" + path + ".tscn");
   }
 
-  public static void DrawTextureRegionRotated(
-    this Node2D node, Texture2D tex, Vector2 pos, float rot,
-    Vector2 size, Vector2 sliceOrigin
-  ) {
-    node.DrawSetTransformMatrix(Transform2D.Identity
-      .Translated(-size / 2)
-      .Rotated(rot)
-      .Translated(size / 2 + pos));
-    node.DrawTextureRectRegion(tex, 
-      new(Vector2.Zero, size), new(sliceOrigin, size));
-    node.DrawSetTransformMatrix(Transform2D.Identity);
+  public static T? GetTypedChild<T>(this Node node) where T: Node {
+    foreach (Node n in node.GetChildren()) {
+      if (n is T nT) return nT;
+    }
+    return null;
+  }
+
+  public static Godot.Collections.Array<T> GdArray<[MustBeVariant]T>(params T[] vals) {
+    return new Godot.Collections.Array<T>(vals);
   }
 }
 

@@ -1,7 +1,5 @@
 namespace tur;
 
-using tur.items;
-
 using Godot;
 
 public static class The {
@@ -19,7 +17,4 @@ public static class The {
       return ResourceLoader.Load<T>(fullPath);
     } }
   }
-
-  public static readonly ResourceGetter<BulkResource> Bulks =
-    new ResourceGetter<BulkResource>("bulk");
 }

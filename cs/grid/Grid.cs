@@ -1,34 +1,46 @@
 namespace tur.grid;
 
-using tur.items;
-using tur.items.inventory;
-using tur.factory;
-
 using Godot;
 
 using System.Collections.Generic;
 using System.Linq;
 
 
-public partial class Grid {
-  public static readonly int PX_PER_SQUARE = 16;
+[GlobalClass]
+public partial class Grid : Node3D {
+  public static readonly int UNITS_PER_SQUARE = 1;
 
-  private Cell[,] cells;
+  [Export]
+  public Vector2I Size;
+  [Export]
+  public PackedScene CellPrefab;
 
-  // TODO: caching of the graph stuff
+  public Cell[,] cells;
 
-  public Grid() {
-    int w = 8, h = 8;
-    this.cells = new Cell[w,h];
-    for (int x = 0; x < w; x++) {
-      for (int y = 0; y < h; y++) {
-        this.cells[x,y] = new Cell(new(x,y));
+  public void ToolCreateGrid() {
+    if (this.cells != null) {
+      foreach (var c in this.cells) {
+        if (c != null && !c.IsQueuedForDeletion()) c.QueueFree();
       }
     }
 
-    this.cells[1,2].mineable = The.Bulks["coal"];
+    this.cells = new Cell[this.Size.X, this.Size.Y];
+    for (int x = 0; x < Size.X; x++) {
+      for (int y = 0; y < Size.Y; y++) {
+        Cell cell = this.CellPrefab.Instantiate<Cell>();
+        cell.PostCreateFixup(new(x,y));
+        cell.Name = cell.Name + $"({x},{y})";
+        this.cells[x,y] = cell;
+        this.AddChild(cell);
+        cell.Owner = this;
+      }
+    }
   }
 
+  public override void _Ready() {
+    
+  }
+  
   public Vector2I Bounds() {
     return new(this.cells.GetLength(0), this.cells.GetLength(1));
   }
@@ -50,12 +62,16 @@ public partial class Grid {
     return ((System.Collections.IEnumerable) this.cells).Cast<Cell>();
   }
 
-  public static Vector2I WorldPosToGridPos(Vector2 pos) {
-    return (Vector2I) (pos / PX_PER_SQUARE);
+  public static Vector3 GridPosToWorldPos(Vector2I pos) {
+    var v2 = pos * UNITS_PER_SQUARE;
+    // Remember that Y is up, ugh
+    return new Vector3(v2.X, 0, v2.Y);
   }
 
-  public static Vector2 GridPosToWorldPos(Vector2I pos) {
-    return pos * PX_PER_SQUARE;
+  public static Vector2I WorldPosToGridPos(Vector3 pos) {
+    var v2 = pos / UNITS_PER_SQUARE;
+    // Remember that Y is up, ugh
+    return new Vector2I((int)v2.X, (int)v2.Z);
   }
 
   public bool GridPosInBounds(Vector2I pos) {
@@ -64,28 +80,4 @@ public partial class Grid {
     return 0 <= pos.X && pos.X < bounds.X
       &&   0 <= pos.Y && pos.Y < bounds.Y;
   }
-
-  public Vector2I? MouseOverPos(Vector2 localMousePosition) {
-    Vector2I v = WorldPosToGridPos(localMousePosition);
-    return this.GridPosInBounds(v) ? v : null;
-  }
-
-  public void TickAllFactories() {
-    var tarjan = TarjanSccinator.Calculate(this);
-
-    MultiInventory electricGrid = new MultiInventory(
-      tarjan.tickOrder.Select(f => f.bufferOut as Inventory).ToList(),
-      br => br.ResourceName == "electricity"
-    );
-
-    foreach (var factory in tarjan.tickOrder) {
-      List<Factory> sources = tarjan.factorySourcesGraph[factory.cell.pos];
-      List<Inventory> inventories = new() { electricGrid };
-      inventories.AddRange(sources.Select(s => s.bufferOut));
-      MultiInventory multiInv = new MultiInventory(inventories);
-      factory.Tick(multiInv);
-    }
-  }
-
-
 }
