@@ -14,42 +14,43 @@ public partial class PlayerController : Node3D {
   private Cell? mouseoverCell = null;
   private Unit? selectedUnit = null;
 
+  public bool PlayersTurn { get; private set; } = false;
+
   private Camera3D camera { get => this.GetTypedChild<Camera3D>(); }
 
-  public int QueuedAnimations = 0;
-  
+  private UnitAction? playerDecision = null;
+
   public override void _Ready() {
     The.PlayerController = this;
   }
 
   public override void _Process(double dt) {
-    if (Input.IsActionJustPressed("select")) {
-      Unit? prevUnit = this.selectedUnit;
-      this.SelectUnit(null);
-      if (this.mouseoverCell is Cell c && c.Unit is Unit u) {
-        // Allow clicking on the current unit to deselect
-        if (u != prevUnit) {
-          this.SelectUnit(u);
-        }
-      }
-    }
-    if (Input.IsActionJustPressed("command")) {
+    if (this.PlayersTurn = Input.IsActionJustPressed("command")) {
       if (this.selectedUnit is Unit u
           && this.mouseoverCell is Cell c) {
-        Vector2I start = u.ParentCell.GridPos;
         Vector2I end = this.mouseoverCell.GridPos;
-        var poses = The.Grid.AStar.GetIdPath(start, end);
-        GD.Print(poses);
-        if (poses != null) {
-          u.QueueMove(c, poses.ToList());
-          this.SelectUnit(null);
-        }
+        this.playerDecision = new UnitAction.Move(end);
       }
     }
   }
 
   public override void _PhysicsProcess(double dt) {
     this.mouseoverCell = this.getMouseoverCell();
+  }
+
+  public void BeginPlayerControlledTurn() {
+    this.PlayersTurn = true;
+    Unit u = The.Grid.TurnOrder.CurrentUnit();
+    this.SelectUnit(u);
+  }
+
+  public UnitAction? TryConsumePlayerDecision() {
+    var decision = this.playerDecision;
+    if (decision != null) {
+      this.playerDecision = null;
+      this.PlayersTurn = false;
+    }
+    return decision;
   }
 
   private Cell? getMouseoverCell() {

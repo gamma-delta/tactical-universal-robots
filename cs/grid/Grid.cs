@@ -15,53 +15,88 @@ public partial class Grid : Node3D {
   [Export]
   public PackedScene CellPrefab;
 
+  public Vector2I GridSize { get; private set; }
+
   private Cell[,] cells;
 
   public AStarGrid2D AStar = new();
-  private List<Unit> turnOrder = new();
+  private TurnSequence turnSequence;
+  public TurnOrderTracker TurnOrder = new();
 
   public override void _Ready() {
     The.Grid = this;
   
-    int sizeX = 12, sizeY = 8;
+    this.GridSize = new(12, 8);
 
-    this.cells = new Cell[sizeX, sizeY];
-    for (int x = 0; x < sizeX; x++) {
-      for (int y = 0; y < sizeY; y++) {
+    this.cells = new Cell[this.GridSize.X, this.GridSize.Y];
+    for (int x = 0; x < this.GridSize.X; x++) {
+      for (int y = 0; y < this.GridSize.Y; y++) {
         Cell cell = this.CellPrefab.Instantiate<Cell>();
         cell.PostCreateFixup(new(x, y));
         this.AddChild(cell);
         this.cells[x,y] = cell;
 
-        if (x == 4 && y == 7) {
+        if (x == 4 && 3 <= y && y <= 5) {
           Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
+          unit.Mind = new Mind.MoveRandomly();
+          this.AddUnit(unit, new(x, y));
+        } else if (x == 5 && y == 5) {
+          Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
+          // No mind! player unit
           this.AddUnit(unit, new(x, y));
         }
       }
     }
 
-    this.AStar.Region = new(0, 0, sizeX, sizeY);
+    this.AStar.Region = new(0, 0, this.GridSize.X, this.GridSize.Y);
     this.AStar.DefaultComputeHeuristic = AStarGrid2D.Heuristic.Octile;
     this.AStar.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Octile;
     this.AStar.DiagonalMode = AStarGrid2D.DiagonalModeEnum.OnlyIfNoObstacles;
     this.AStar.Update();
   }
 
+  public override void _Process(double dt) {
+    if (this.TurnOrder.CurrentUnit() is Unit unit) {
+      if (this.turnSequence == TurnSequence.JustStarted) {
+        if (unit.Mind is Mind mind) {
+          UnitAction decision = unit.Mind.Decide(unit, this);
+          GD.Print($"Unit {unit} decided to {decision}");
+          unit.FinishedWithTurn = false;
+          decision.Perform(unit, this);
+          this.turnSequence = TurnSequence.FinishingAction;
+        } else {
+          // Player controlled unit
+          GD.Print($"Making the player make a decision for {unit}");
+          The.PlayerController.BeginPlayerControlledTurn();
+          this.turnSequence = TurnSequence.WaitingToDecide;
+        }
+      }
+      if (this.turnSequence == TurnSequence.WaitingToDecide) {
+        if (The.PlayerController.TryConsumePlayerDecision() is UnitAction decision) {
+          GD.Print($"Player decided to {decision} for {unit}");
+          decision.Perform(unit, this);
+          unit.FinishedWithTurn = false;
+          this.turnSequence = TurnSequence.FinishingAction;
+        }
+      }
+      if (this.turnSequence == TurnSequence.FinishingAction) {
+        if (unit.FinishedWithTurn) {
+          GD.Print($"{unit} finished with animation or whatever");
+          this.TurnOrder.NextTurn();
+          this.turnSequence = TurnSequence.JustStarted;
+        }
+      }
+    }
+  }
+
   public void AddUnit(Unit unit, Vector2I pos) {
     Cell? c = this.GetCell(pos);
     if (c is Cell cc) {
       cc.AddChild(unit);
-      this.turnOrder.Append(unit);
+      this.TurnOrder.AddUnit(unit);
     }
   }
   
-  public Vector2I Bounds() {
-    return new(this.cells.GetLength(0), this.cells.GetLength(1));
-  }
-
-  public int Width() => this.Bounds().X;
-  public int Height() => this.Bounds().Y;
-
   public Cell? GetCell(Vector2I pos) {
     return this.GridPosInBounds(pos)
       ? this.cells[pos.X, pos.Y]
@@ -90,8 +125,9 @@ public partial class Grid : Node3D {
 
   public bool GridPosInBounds(Vector2I pos) {
     // vector comparison operators don't do what i want them to do
-    var bounds = this.Bounds();
+    var bounds = this.GridSize;
     return 0 <= pos.X && pos.X < bounds.X
       &&   0 <= pos.Y && pos.Y < bounds.Y;
   }
+
 }

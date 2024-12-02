@@ -8,16 +8,31 @@ using System.Collections.Generic;
 
 [GlobalClass]
 public partial class Unit : Node3D {
+  [Export]
+  public int MoveDistance = 4;
+  
   public Vector2I GridPos { get => this.ParentCell.GridPos; }
   public Cell ParentCell { get => this.GetParent<Cell>(); }
+
+  public bool FinishedWithTurn = true;
+  // A null mind means that the player controls it.
+  public Mind? Mind = null;
+
+  public RandomNumberGenerator rng { get; private set; }
+
+  public override void _Ready() {
+    this.rng = new RandomNumberGenerator();
+  }
 
   public void SetSelected(bool selected) {
     this.GetNode<Node3D>("%SelectionReticle").Visible = selected;
   }
 
-  public void QueueMove(Cell targetCell, List<Vector2I> path) {
+  public Tween QueueMove(List<Vector2I> path) {
+    Vector2I targetPos = path[^1];
+    Cell targetCell = The.Grid.GetCell(targetPos)!;
     this.Reparent(targetCell, keepGlobalTransform: true);
-    // The.PlayerController.QueuedAnimations += 1;
+    this.FinishedWithTurn = false;
     var tween = this.CreateTween();
     for (int i = 0; i < path.Count - 1; i++) {
       Vector2I coord = path[i];
@@ -29,5 +44,6 @@ public partial class Unit : Node3D {
       float distance = coord.DistanceTo(destination);
       tween.TweenProperty(this, "position", worldOffset, 0.1 * distance);
     }
+    return tween;
   }
 }
