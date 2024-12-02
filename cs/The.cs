@@ -1,8 +1,11 @@
 namespace tur;
 
+using tur.grid;
+using tur.controls;
+
 using Godot;
 
-public static class The {
+public class The {
   public class ResourceGetter<T> where T: Resource {
     internal string path;
 
@@ -17,4 +20,7 @@ public static class The {
       return ResourceLoader.Load<T>(fullPath);
     } }
   }
+
+  public static Grid Grid;
+  public static PlayerController PlayerController;
 }

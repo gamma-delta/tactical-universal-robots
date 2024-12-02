@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://tj1xjp8t7uf3"]
 
-[ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="2_eyywi"]
+[ext_resource type="PackedScene" uid="uid://bavg44syhu6b2" path="res://scenes/player_controller.tscn" id="2_or0re"]
 [ext_resource type="Script" path="res://scripts/CtrlQQuit.gd" id="2_qfvl6"]
 [ext_resource type="Script" path="res://cs/grid/Grid.cs" id="3_yqbrg"]
 [ext_resource type="PackedScene" uid="uid://ct8p3v7mwgwj4" path="res://scenes/prefabs/Cell.tscn" id="4_fyu5t"]
@@ -10,11 +10,11 @@
 [node name="CtrlQQuit" type="Node" parent="."]
 script = ExtResource("2_qfvl6")
 
-[node name="PlayerController" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 16, 0)
-script = ExtResource("2_eyywi")
+[node name="PlayerController" parent="." instance=ExtResource("2_or0re")]
 
 [node name="Grid" type="Node3D" parent="."]
 script = ExtResource("3_yqbrg")
-Size = Vector2i(8, 8)
 CellPrefab = ExtResource("4_fyu5t")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.208577, 0.978006, 0, -0.978006, 0.208577, 0, 3.78299, 0)

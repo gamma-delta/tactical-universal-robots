@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://0tf0bkttv24p"]
+
+[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_l7n48"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wa77t"]
+albedo_color = Color(1, 1, 0.2, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_sixbs"]
+material = SubResource("StandardMaterial3D_wa77t")
+inner_radius = 0.37
+outer_radius = 0.432
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_o5gml"]
+
+[node name="BoringUnit" type="Node3D"]
+script = ExtResource("1_l7n48")
+
+[node name="SelectionReticle" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19999, 0)
+visible = false
+mesh = SubResource("TorusMesh_sixbs")
+
+[node name="Capsule" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_o5gml")
