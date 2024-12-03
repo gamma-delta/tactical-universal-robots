@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Team" load_steps=2 format=3 uid="uid://dtm0ye03jc0eh"]
+
+[ext_resource type="Script" path="res://cs/units/Team.cs" id="1_vbbj6"]
+
+[resource]
+script = ExtResource("1_vbbj6")
+NonAggressive = false
+HpColor = Color(0, 0.89, 0.0889999, 1)
+HpMissingColor = Color(0.16588, 0.44, 0.0484, 1)

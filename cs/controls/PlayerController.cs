@@ -80,7 +80,9 @@ public partial class PlayerController : Node3D {
   }
 
   private void resetCameraToGridCenter() {
-    Vector2 gridCenter = (Vector2)The.Grid.GridSize / 2f;
-    this.Position = new(3 + gridCenter.X, 5, 3 + gridCenter.Y);
+    Vector3 gridCenterReal = Grid.GridPosToWorldPos(The.Grid.GridSize) / 2f;
+    var camPoint = this.camera.Transform.Basis.GetRotationQuaternion()
+      * Vector3.Forward;
+    this.camera.Position = gridCenterReal - camPoint * 10;
   }
 }

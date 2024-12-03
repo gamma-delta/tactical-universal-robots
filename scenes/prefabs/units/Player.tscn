@@ -17,6 +17,9 @@ roughness = 0.45
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_7nddu"]
 material = SubResource("StandardMaterial3D_qv63t")
+top_radius = 0.3
+bottom_radius = 0.3
+height = 1.5
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_1j4pi")
@@ -27,6 +30,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19999, 0)
 visible = false
 mesh = SubResource("TorusMesh_sixbs")
 
-[node name="Capsule" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[node name="Cylinder" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 mesh = SubResource("CylinderMesh_7nddu")
