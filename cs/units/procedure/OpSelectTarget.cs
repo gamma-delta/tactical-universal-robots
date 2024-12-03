@@ -11,7 +11,7 @@ public record OpSelectTarget : Opcode {
   public UnitAction Execute(Unit me, ProcedureMind mind, Grid grid) {
     Unit? aPlayer = grid.GetUnits().First(u => u.Mind == null);
     mind.Memory["target"] = aPlayer;
-    return new actions.DoNothing();
+    return new ActionDoNothing();
   }
 
   public string Stringify(Unit me, ProcedureMind mind, Grid grid) {

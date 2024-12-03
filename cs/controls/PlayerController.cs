@@ -23,14 +23,16 @@ public partial class PlayerController : Node3D {
 
   public override void _Ready() {
     The.PlayerController = this;
+
+    this.resetCameraToGridCenter();
   }
 
   public override void _Process(double dt) {
-    if (this.PlayersTurn = Input.IsActionJustPressed("command")) {
+    if (this.PlayersTurn && Input.IsActionJustPressed("command")) {
       if (this.selectedUnit is Unit u
           && this.mouseoverCell is Cell c) {
         Vector2I end = this.mouseoverCell.GridPos;
-        this.playerDecision = new UnitAction.Move(end);
+        this.playerDecision = new ActionMoveTo(end);
       }
     }
   }
@@ -42,7 +44,7 @@ public partial class PlayerController : Node3D {
   public void BeginPlayerControlledTurn() {
     this.PlayersTurn = true;
     Unit u = The.Grid.TurnOrder.CurrentUnit();
-    this.SelectUnit(u);
+    this.selectUnit(u);
   }
 
   public UnitAction? TryConsumePlayerDecision() {
@@ -71,9 +73,14 @@ public partial class PlayerController : Node3D {
     return null;
   }
 
-  private void SelectUnit(Unit? u) {
+  private void selectUnit(Unit? u) {
     this.selectedUnit?.SetSelected(false);
     this.selectedUnit = u;
     this.selectedUnit?.SetSelected(true);
+  }
+
+  private void resetCameraToGridCenter() {
+    Vector2 gridCenter = (Vector2)The.Grid.GridSize / 2f;
+    this.Position = new(3 + gridCenter.X, 5, 3 + gridCenter.Y);
   }
 }

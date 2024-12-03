@@ -6,13 +6,10 @@ using System.Linq;
 
 using Godot;
 
-public record Move(Vector2I target) : UnitAction {
+public record ActionMoveTo(Vector2I target) : UnitAction {
   public void Perform(Unit unit, Grid grid) {
     // Pathfind
-    var pathfind = grid.AStar.GetIdPath(unit.GridPos, target);
-    if (pathfind.Count > unit.MoveDistance) {
-      pathfind = pathfind.Slice(0, unit.MoveDistance);
-    }
+    var (pathfind, _tooLong) = grid.GetAStarPath(unit, target);
 
     var tween = unit.QueueMove(pathfind.ToList());
     tween.TweenCallback(Callable.From(() => {

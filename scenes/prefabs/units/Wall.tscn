@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://c0dpqoyolebou"]
+
+[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_p6efh"]
+[ext_resource type="Script" path="res://cs/units/MindMyLandlord.cs" id="2_yddce"]
+
+[sub_resource type="Resource" id="Resource_l08gd"]
+script = ExtResource("2_yddce")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6niko"]
+albedo_color = Color(1, 0.732333, 0.27, 1)
+roughness = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_naiji"]
+material = SubResource("StandardMaterial3D_6niko")
+
+[node name="Wall" type="Node3D"]
+script = ExtResource("1_p6efh")
+AlwaysSkipTurns = true
+Mind = SubResource("Resource_l08gd")
+
+[node name="SelectionReticle" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19999, 0)
+visible = false
+
+[node name="Blocc" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_naiji")

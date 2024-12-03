@@ -39,12 +39,14 @@ public partial class Grid : Node3D {
         this.cells[x,y] = cell;
 
         if (x == 4 && y == 4) {
-          Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
-          unit.Mind = new ProcedureMind();
+          Unit unit = Extensions.LoadPrefab<Unit>("units/Mook");
           this.AddUnit(unit, new(x, y));
         } else if (x == 5 && y == 5) {
-          Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
+          Unit unit = Extensions.LoadPrefab<Unit>("units/Player");
           // No mind! player unit
+          this.AddUnit(unit, new(x, y));
+        } else if (x > 2 && x < 10 && y == 6) {
+          Unit unit = Extensions.LoadPrefab<Unit>("units/Wall");
           this.AddUnit(unit, new(x, y));
         }
       }
@@ -57,6 +59,7 @@ public partial class Grid : Node3D {
     this.AStar.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Octile;
     this.AStar.DiagonalMode = AStarGrid2D.DiagonalModeEnum.OnlyIfNoObstacles;
     this.AStar.Update();
+    this.setAStarSolidity();
   }
 
   public override void _Process(double dt) {
@@ -86,6 +89,8 @@ public partial class Grid : Node3D {
       if (this.turnSequence == TurnSequence.FinishingAction) {
         if (unit.FinishedWithTurn) {
           GD.Print($"{unit} finished with animation or whatever");
+
+          this.setAStarSolidity();
           this.TurnOrder.NextTurn();
           this.turnSequence = TurnSequence.JustStarted;
         }
@@ -97,7 +102,8 @@ public partial class Grid : Node3D {
     Cell? c = this.GetCell(pos);
     if (c is Cell cc) {
       cc.AddChild(unit);
-      this.TurnOrder.AddUnit(unit);
+      if (!unit.AlwaysSkipTurns)
+        this.TurnOrder.AddUnit(unit);
     }
   }
   
@@ -122,6 +128,31 @@ public partial class Grid : Node3D {
     }
   }
 
+  public bool GridPosInBounds(Vector2I pos) {
+    // vector comparison operators don't do what i want them to do
+    var bounds = this.GridSize;
+    return 0 <= pos.X && pos.X < bounds.X
+      &&   0 <= pos.Y && pos.Y < bounds.Y;
+  }
+
+  private void setAStarSolidity() {
+    this.AStar.FillSolidRegion(this.AStar.Region, solid: false);
+    foreach (var u in this.GetUnits()) {
+      this.AStar.SetPointSolid(u.GridPos, solid: true);
+    }
+  }
+
+  /// Automatically slices, and returns `true`, if it's too far
+  public (List<Vector2I>, bool) GetAStarPath(Unit unit, Vector2I target) {
+    var pathfind = this.AStar.GetIdPath(unit.GridPos, target);
+    pathfind.RemoveAt(0); // skip the starting pos, we're already there
+    bool tooLong = pathfind.Count > unit.MoveDistance;
+    if (tooLong) {
+      pathfind = pathfind.Slice(0, unit.MoveDistance);
+    }
+    return (pathfind.ToList(), tooLong);
+  }
+
   public static Vector3 GridPosToWorldPos(Vector2I pos) {
     var v2 = pos * UNITS_PER_SQUARE;
     // Remember that Y is up, ugh
@@ -133,12 +164,4 @@ public partial class Grid : Node3D {
     // Remember that Y is up, ugh
     return new Vector2I(Mathf.RoundToInt(v2.X), Mathf.RoundToInt(v2.Z));
   }
-
-  public bool GridPosInBounds(Vector2I pos) {
-    // vector comparison operators don't do what i want them to do
-    var bounds = this.GridSize;
-    return 0 <= pos.X && pos.X < bounds.X
-      &&   0 <= pos.Y && pos.Y < bounds.Y;
-  }
-
 }

@@ -5,7 +5,7 @@ using tur.units.actions;
 
 public record OpNop : Opcode {
   public UnitAction Execute(Unit me, ProcedureMind mind, Grid grid) {
-    return new actions.DoNothing();
+    return new ActionDoNothing();
   }
 
   public string Stringify(Unit me, ProcedureMind mind, Grid grid) {

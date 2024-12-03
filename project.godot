@@ -25,6 +25,10 @@ window/size/window_height_override=480
 
 project/assembly_name="tacticaluniversalrobots"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/anthonyec.camera_preview/plugin.cfg")
+
 [input]
 
 quit={

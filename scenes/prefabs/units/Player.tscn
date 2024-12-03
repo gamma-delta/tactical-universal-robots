@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://0tf0bkttv24p"]
+[gd_scene load_steps=6 format=3 uid="uid://du1eftfb5gp70"]
 
-[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_l7n48"]
+[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_1j4pi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wa77t"]
 albedo_color = Color(1, 1, 0.2, 1)
@@ -10,10 +10,16 @@ material = SubResource("StandardMaterial3D_wa77t")
 inner_radius = 0.37
 outer_radius = 0.432
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_o5gml"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qv63t"]
+albedo_color = Color(0.1092, 0.16952, 0.26, 1)
+metallic = 0.33
+roughness = 0.45
 
-[node name="BoringUnit" type="Node3D"]
-script = ExtResource("1_l7n48")
+[sub_resource type="CylinderMesh" id="CylinderMesh_7nddu"]
+material = SubResource("StandardMaterial3D_qv63t")
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_1j4pi")
 
 [node name="SelectionReticle" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
@@ -23,4 +29,4 @@ mesh = SubResource("TorusMesh_sixbs")
 
 [node name="Capsule" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_o5gml")
+mesh = SubResource("CylinderMesh_7nddu")

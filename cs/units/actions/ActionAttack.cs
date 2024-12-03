@@ -4,7 +4,7 @@ using Godot;
 
 using tur.grid;
 
-public record Attack(Unit target) : UnitAction {
+public record ActionAttack(Unit target) : UnitAction {
     public void Perform(Unit me, Grid grid) {
       GD.Print($"Bang, shooting unit {target}");
       var tw = me.CreateTween();

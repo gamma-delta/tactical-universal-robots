@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Godot;
+using System.Text;
 
 public static class Extensions {
   public static RootGlobal GetRootGlobal(this Node node) {
@@ -33,6 +34,14 @@ public static class Extensions {
 
   public static Godot.Collections.Array<T> GdArray<[MustBeVariant]T>(params T[] vals) {
     return new Godot.Collections.Array<T>(vals);
+  }
+
+  public static string ListToString<T>(this List<T> list) {
+    var bob = new StringBuilder();
+    bob.Append('[');
+    bob.AppendJoin(", ", list);
+    bob.Append(']');
+    return bob.ToString();
   }
 }
 
