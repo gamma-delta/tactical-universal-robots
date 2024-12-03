@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://scripts/CtrlQQuit.gd" id="2_qfvl6"]
 [ext_resource type="Script" path="res://cs/grid/Grid.cs" id="3_yqbrg"]
-[ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="4_0yx48"]
 [ext_resource type="PackedScene" uid="uid://ct8p3v7mwgwj4" path="res://scenes/prefabs/Cell.tscn" id="4_fyu5t"]
+[ext_resource type="PackedScene" uid="uid://ddunudbx6mhaf" path="res://scenes/player_controller.tscn" id="4_q8v2a"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_a1nwy"]
 radius = 0.1
@@ -25,13 +25,4 @@ transform = Transform3D(1, 0, 0, 0, 0.208577, 0.978006, 0, -0.978006, 0.208577, 
 transform = Transform3D(0.999989, 0.00064444, -0.00460697, -0.000628405, 0.999994, 0.00348556, 0.00460919, -0.00348263, 0.999983, 0, 0, 0)
 mesh = SubResource("SphereMesh_a1nwy")
 
-[node name="PlayerController" type="Node3D" parent="."]
-script = ExtResource("4_0yx48")
-
-[node name="Camera3D" type="Camera3D" parent="PlayerController"]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 3, 5, 3)
-projection = 1
-current = true
-size = 10.0
-
-[node name="Cursor" type="Node3D" parent="PlayerController"]
+[node name="PlayerController" parent="." instance=ExtResource("4_q8v2a")]

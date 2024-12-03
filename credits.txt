@@ -1,0 +1,3 @@
+Little Camera Preview by anthonyec: https://godotengine.org/asset-library/asset/2500. Licensed under MIT
+
+GlassTTY by svofski: https://github.com/svofski/glasstty. Licensed under Unlicense

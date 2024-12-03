@@ -1,11 +1,13 @@
 namespace tur.units;
 
 using tur.grid;
+using tur.units.procedure;
 
 using Godot;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 [GlobalClass]
 public partial class Unit : Node3D {
@@ -13,7 +15,7 @@ public partial class Unit : Node3D {
   public int MoveDistance = 4;
   /// Set this to true for walls and stuff
   [Export]
-  public bool AlwaysSkipTurns = false;
+  public bool Inanimate = false;
 
   /// A null mind means that the player controls it.
   [Export(hintString: "A null mind means the player controls it")]
@@ -56,5 +58,41 @@ public partial class Unit : Node3D {
       tween.TweenProperty(this, "position", worldOffset, 0.1 * distance);
     }
     return tween;
+  }
+
+  public void UpdateTextLabel(RichTextLabel label) {
+    StringBuilder bob = new StringBuilder();
+    bob.AppendLine("NAME is " + this.Name);
+    bob.AppendLine("DAMAGE is [todo]");
+
+    if (this.Mind is ProcedureMind proc) {
+      bob.AppendLine("\nPROCEDURE is");
+      for (int i = 0; i < proc.Opcodes.Count; i++) {
+        Opcode opc = proc.Opcodes[i];
+        string desc = opc.Stringify(this, proc, The.Grid);
+        char sigil = i == proc.Ip ? '>' : ' ';
+
+        bob.Append('[').Append(sigil).Append("] ").Append(opc);
+        bob.AppendLine();
+      }
+
+      bob.AppendLine("\nMEMORY is");
+      var sortedMem = proc.Memory.OrderBy(kv => kv.Key);
+      foreach (var kv in sortedMem) {
+        if (kv.Value.VariantType != Variant.Type.Nil) {
+          bob.Append("- $")
+            .Append(kv.Key)
+            .Append(": ")
+            .Append(kv.Value.ToString());
+          bob.AppendLine();
+        }
+      }
+    }
+
+    // For some reason two newlines displays some ghost character
+    bob.Replace("\n\n", "\n \n");
+
+    label.Clear();
+    label.AddText(bob.ToString());
   }
 }

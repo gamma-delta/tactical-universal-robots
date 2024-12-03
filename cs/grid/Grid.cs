@@ -40,10 +40,12 @@ public partial class Grid : Node3D {
 
         if (x == 4 && y == 4) {
           Unit unit = Extensions.LoadPrefab<Unit>("units/Mook");
+          unit.Name = "GUARD_01";
           this.AddUnit(unit, new(x, y));
         } else if (x == 5 && y == 5) {
           Unit unit = Extensions.LoadPrefab<Unit>("units/Player");
           // No mind! player unit
+          unit.Name = "SHRED";
           this.AddUnit(unit, new(x, y));
         } else if (x > 2 && x < 10 && y == 6) {
           Unit unit = Extensions.LoadPrefab<Unit>("units/Wall");
@@ -102,7 +104,7 @@ public partial class Grid : Node3D {
     Cell? c = this.GetCell(pos);
     if (c is Cell cc) {
       cc.AddChild(unit);
-      if (!unit.AlwaysSkipTurns)
+      if (!unit.Inanimate)
         this.TurnOrder.AddUnit(unit);
     }
   }

@@ -1,0 +1,66 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddunudbx6mhaf"]
+
+[ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="1_kuhfv"]
+[ext_resource type="Theme" uid="uid://bvjj2ept5y1y" path="res://resources/terminal.theme" id="2_gdr0c"]
+
+[sub_resource type="Gradient" id="Gradient_njbl0"]
+colors = PackedColorArray(0.0197667, 0.1, 0.017, 1, 0.006775, 0.05, 0.0045, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_drivo"]
+gradient = SubResource("Gradient_njbl0")
+fill_to = Vector2(0, 1)
+
+[node name="PlayerController" type="Node3D"]
+script = ExtResource("1_kuhfv")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 3, 5, 3)
+projection = 1
+current = true
+size = 10.0
+
+[node name="Cursor" type="Node3D" parent="."]
+
+[node name="UiContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="TerminalTextbox" type="PanelContainer" parent="UiContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("2_gdr0c")
+
+[node name="Background" type="TextureRect" parent="UiContainer/TerminalTextbox"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_drivo")
+
+[node name="MarginContainer" type="MarginContainer" parent="UiContainer/TerminalTextbox"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="TerminalDisplay" type="RichTextLabel" parent="UiContainer/TerminalTextbox/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "NAME is GUARD_01
+DAMAGE is [XX...]
+ 
+PROCEDURE is
+[ ] SELECT $target
+  - enemy AND
+  - outside of cell
+[>] ATTACK $target
+ 
+MEMORY is
+- $target = ROBOT_1"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
