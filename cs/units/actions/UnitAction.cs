@@ -1,4 +1,4 @@
-namespace tur.units;
+namespace tur.units.actions;
 
 using tur.grid;
 
@@ -9,10 +9,6 @@ using Godot;
 
 public interface UnitAction {
   public abstract void Perform(Unit unit, Grid grid);
-
-  public record Noop : UnitAction {
-    public void Perform(Unit unit, Grid grid) {}
-  }
 
   public record Move(Vector2I target) : UnitAction {
     public void Perform(Unit unit, Grid grid) {

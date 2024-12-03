@@ -1,6 +1,8 @@
 namespace tur.grid;
 
 using tur.units;
+using tur.units.actions;
+using tur.units.procedure;
 
 using Godot;
 
@@ -36,9 +38,9 @@ public partial class Grid : Node3D {
         this.AddChild(cell);
         this.cells[x,y] = cell;
 
-        if (x == 4 && 3 <= y && y <= 5) {
+        if (x == 4 && y == 4) {
           Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
-          unit.Mind = new Mind.MoveRandomly();
+          unit.Mind = new ProcedureMind();
           this.AddUnit(unit, new(x, y));
         } else if (x == 5 && y == 5) {
           Unit unit = Extensions.LoadPrefab<Unit>("BoringUnit");
@@ -48,6 +50,8 @@ public partial class Grid : Node3D {
       }
     }
 
+    // TODO: make a helper function that sets up astar and forbids locations
+    // that have units
     this.AStar.Region = new(0, 0, this.GridSize.X, this.GridSize.Y);
     this.AStar.DefaultComputeHeuristic = AStarGrid2D.Heuristic.Octile;
     this.AStar.DefaultEstimateHeuristic = AStarGrid2D.Heuristic.Octile;
@@ -109,6 +113,13 @@ public partial class Grid : Node3D {
     // society if c# had java-like ability to call methods as normal
     // fns with a decurried first argument
     return ((System.Collections.IEnumerable) this.cells).Cast<Cell>();
+  }
+
+  public IEnumerable<Unit> GetUnits() {
+    foreach (var c in this.cells) {
+      if (c.Unit is Unit u)
+        yield return u;
+    }
   }
 
   public static Vector3 GridPosToWorldPos(Vector2I pos) {
