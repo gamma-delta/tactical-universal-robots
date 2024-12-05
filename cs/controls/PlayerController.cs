@@ -28,8 +28,13 @@ public partial class PlayerController : Node3D {
   }
 
   public override void _Process(double dt) {
+    var rmt = this.GetNode<RichTextLabel>("%ReadMemoryText");
+    if (this.getMouseoverCell()?.Unit is Unit u) {
+      u.UpdateTerminal(rmt);
+    }
+  
     if (this.PlayersTurn && Input.IsActionJustPressed("command")) {
-      if (this.selectedUnit is Unit u
+      if (this.selectedUnit is Unit
           && this.mouseoverCell is Cell c) {
         Vector2I end = this.mouseoverCell.GridPos;
         this.playerDecision = new ActionMoveTo(end);

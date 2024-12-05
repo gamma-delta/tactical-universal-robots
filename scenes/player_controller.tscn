@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddunudbx6mhaf"]
+[gd_scene load_steps=5 format=3 uid="uid://d121xw1oxhrow"]
 
 [ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="1_kuhfv"]
 [ext_resource type="Theme" uid="uid://bvjj2ept5y1y" path="res://resources/terminal.theme" id="2_gdr0c"]
@@ -39,7 +39,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="UiContainer/SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(918, 648)
 render_target_update_mode = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UiContainer"]

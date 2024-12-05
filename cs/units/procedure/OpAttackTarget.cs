@@ -15,7 +15,11 @@ public record OpAttackTarget : Opcode {
     return new ActionDoNothing();
   }
 
-  public string Stringify(Unit me, ProcedureMind mind, Grid grid) {
-    return "Attack $target";
+  public string LongDesc(Unit me, ProcedureMind mind, Grid grid) {
+    return "ATTACK $target";
+  }
+
+  public string ShortDesc(Unit me, ProcedureMind mind, Grid grid) {
+    return "ATTACK $target";
   }
 }

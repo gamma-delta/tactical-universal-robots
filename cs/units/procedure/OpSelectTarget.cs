@@ -14,7 +14,11 @@ public record OpSelectTarget : Opcode {
     return new ActionDoNothing();
   }
 
-  public string Stringify(Unit me, ProcedureMind mind, Grid grid) {
+  public string LongDesc(Unit me, ProcedureMind mind, Grid grid) {
+    return "SELECT $target";
+  }
+
+  public string ShortDesc(Unit me, ProcedureMind mind, Grid grid) {
     return "SELECT $target";
   }
 }

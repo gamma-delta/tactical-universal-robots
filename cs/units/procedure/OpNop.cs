@@ -8,7 +8,8 @@ public record OpNop : Opcode {
     return new ActionDoNothing();
   }
 
-  public string Stringify(Unit me, ProcedureMind mind, Grid grid) {
-    return "NOOP";
-  }
+  public string LongDesc(Unit me, ProcedureMind mind, Grid grid) =>
+    "NOOP";
+  public string ShortDesc(Unit me, ProcedureMind mind, Grid grid) => 
+    "NOOP";
 }

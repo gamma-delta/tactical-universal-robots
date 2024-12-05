@@ -28,8 +28,20 @@ public partial class Unit : Node3D {
 
   public RandomNumberGenerator rng { get; private set; }
 
+  private Label nameLabel { get => this.GetNode<Label>("%Label"); }
+
   public override void _Ready() {
     this.rng = new RandomNumberGenerator();
+  }
+
+  public override void _Process(double dt) {
+    if (!this.Inanimate) {
+      string s = this.Name;
+      if (this.Mind != null) {
+        s += "\n" + this.Mind.ShortDesc(this, The.Grid);
+      }
+      this.nameLabel.Text = s;
+    }
   }
 
   public void SetSelected(bool selected) {
@@ -60,34 +72,12 @@ public partial class Unit : Node3D {
     return tween;
   }
 
-  public void UpdateTextLabel(RichTextLabel label) {
+  public void UpdateTerminal(RichTextLabel label) {
     StringBuilder bob = new StringBuilder();
     bob.AppendLine("NAME is " + this.Name);
     bob.AppendLine("DAMAGE is [todo]");
 
-    if (this.Mind is ProcedureMind proc) {
-      bob.AppendLine("\nPROCEDURE is");
-      for (int i = 0; i < proc.Opcodes.Count; i++) {
-        Opcode opc = proc.Opcodes[i];
-        string desc = opc.Stringify(this, proc, The.Grid);
-        char sigil = i == proc.Ip ? '>' : ' ';
-
-        bob.Append('[').Append(sigil).Append("] ").Append(opc);
-        bob.AppendLine();
-      }
-
-      bob.AppendLine("\nMEMORY is");
-      var sortedMem = proc.Memory.OrderBy(kv => kv.Key);
-      foreach (var kv in sortedMem) {
-        if (kv.Value.VariantType != Variant.Type.Nil) {
-          bob.Append("- $")
-            .Append(kv.Key)
-            .Append(": ")
-            .Append(kv.Value.ToString());
-          bob.AppendLine();
-        }
-      }
-    }
+    if (this.Mind != null) this.Mind.LongDesc(this, The.Grid, bob);
 
     // For some reason two newlines displays some ghost character
     bob.Replace("\n\n", "\n \n");

@@ -5,6 +5,7 @@ using tur.units.actions;
 
 using Godot;
 
+/*
 [GlobalClass]
 public partial class MoveRandomly : Mind {
   public override UnitAction Decide(Unit unit, Grid grid) {
@@ -20,3 +21,4 @@ public partial class MoveRandomly : Mind {
     return new ActionMoveTo(new(targetX, targetY));
   }
 }
+*/

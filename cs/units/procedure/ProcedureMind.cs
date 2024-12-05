@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 using Godot;
 using GDColl = Godot.Collections;
+using System.Text;
+using System.Linq;
 
 [GlobalClass]
 public partial class ProcedureMind : Mind {
@@ -24,8 +26,37 @@ public partial class ProcedureMind : Mind {
 
     Opcode opc = this.Opcodes[this.Ip];
     this.Ip = Mathf.PosMod(this.Ip + 1, this.Opcodes.Count);
-    GD.Print($"Executing opcode {opc.Stringify(unit, this, grid)}");
+    GD.Print($"Executing opcode {opc.LongDesc(unit, this, grid)}");
     UnitAction action = opc.Execute(unit, this, grid);
     return action;
+  }
+
+  public override void LongDesc(Unit unit, Grid grid, StringBuilder bob) {
+    bob.AppendLine("\nPROCEDURE is");
+    for (int i = 0; i < this.Opcodes.Count; i++) {
+      Opcode opc = this.Opcodes[i];
+      string desc = opc.LongDesc(unit, this, The.Grid);
+      char sigil = i == this.Ip ? '>' : ' ';
+
+      bob.Append('[').Append(sigil).Append("] ").Append(opc);
+      bob.AppendLine();
+    }
+
+    bob.AppendLine("\nMEMORY is");
+    var sortedMem = this.Memory.OrderBy(kv => kv.Key);
+    foreach (var kv in sortedMem) {
+      if (kv.Value.VariantType != Variant.Type.Nil) {
+        bob.Append("- $")
+          .Append(kv.Key)
+          .Append(": ")
+          .Append(kv.Value.ToString());
+        bob.AppendLine();
+      }
+    }
+  }
+
+  public override string ShortDesc(Unit unit, Grid grid) {
+    Opcode opc = this.Opcodes[this.Ip];
+    return opc.ShortDesc(unit, this, grid);
   }
 }
