@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgn4wwkl0mbpy"]
+
+[ext_resource type="Script" path="res://cs/grid/Grid.cs" id="1_havrj"]
+[ext_resource type="PackedScene" uid="uid://ct8p3v7mwgwj4" path="res://scenes/prefabs/Cell.tscn" id="2_2q6sg"]
+
+[node name="GameWorld" type="Node3D"]
+
+[node name="Grid" type="Node3D" parent="."]
+script = ExtResource("1_havrj")
+CellPrefab = ExtResource("2_2q6sg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.208577, 0.978006, 0, -0.978006, 0.208577, 0, 3.78299, 0)

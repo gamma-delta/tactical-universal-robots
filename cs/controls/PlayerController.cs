@@ -17,7 +17,7 @@ public partial class PlayerController : Node3D {
 
   public bool PlayersTurn { get; private set; } = false;
 
-  private Camera3D camera { get => this.GetTypedChild<Camera3D>(); }
+  private Camera3D camera { get => this.GetNode<Camera3D>("%Camera3D"); }
 
   private UnitAction? playerDecision = null;
 

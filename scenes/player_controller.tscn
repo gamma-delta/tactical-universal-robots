@@ -14,6 +14,7 @@ fill_to = Vector2(0, 1)
 script = ExtResource("1_kuhfv")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 3, 5, 3)
 projection = 1
 current = true
@@ -29,23 +30,38 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 
-[node name="TerminalTextbox" type="PanelContainer" parent="UiContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="UiContainer"]
 layout_mode = 2
-size_flags_horizontal = 10
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="UiContainer/SubViewportContainer"]
+unique_name_in_owner = true
+handle_input_locally = false
+size = Vector2i(2, 2)
+render_target_update_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UiContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TerminalTextbox" type="PanelContainer" parent="UiContainer/VBoxContainer"]
+layout_mode = 2
 theme = ExtResource("2_gdr0c")
 
-[node name="Background" type="TextureRect" parent="UiContainer/TerminalTextbox"]
+[node name="Background" type="TextureRect" parent="UiContainer/VBoxContainer/TerminalTextbox"]
 layout_mode = 2
 texture = SubResource("GradientTexture2D_drivo")
 
-[node name="MarginContainer" type="MarginContainer" parent="UiContainer/TerminalTextbox"]
+[node name="MarginContainer" type="MarginContainer" parent="UiContainer/VBoxContainer/TerminalTextbox"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="TerminalDisplay" type="RichTextLabel" parent="UiContainer/TerminalTextbox/MarginContainer"]
+[node name="TerminalDisplay" type="RichTextLabel" parent="UiContainer/VBoxContainer/TerminalTextbox/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8

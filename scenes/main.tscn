@@ -1,28 +1,125 @@
-[gd_scene load_steps=6 format=3 uid="uid://tj1xjp8t7uf3"]
+[gd_scene load_steps=7 format=3 uid="uid://tj1xjp8t7uf3"]
 
+[ext_resource type="Script" path="res://cs/controls/PlayerController.cs" id="2_6ldtj"]
 [ext_resource type="Script" path="res://scripts/CtrlQQuit.gd" id="2_qfvl6"]
-[ext_resource type="Script" path="res://cs/grid/Grid.cs" id="3_yqbrg"]
-[ext_resource type="PackedScene" uid="uid://ct8p3v7mwgwj4" path="res://scenes/prefabs/Cell.tscn" id="4_fyu5t"]
-[ext_resource type="PackedScene" uid="uid://ddunudbx6mhaf" path="res://scenes/player_controller.tscn" id="4_q8v2a"]
+[ext_resource type="Theme" uid="uid://bvjj2ept5y1y" path="res://resources/terminal.theme" id="3_jxmpf"]
+[ext_resource type="PackedScene" uid="uid://dgn4wwkl0mbpy" path="res://scenes/game_world.tscn" id="3_pbppo"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_a1nwy"]
-radius = 0.1
-height = 0.2
+[sub_resource type="Gradient" id="Gradient_njbl0"]
+colors = PackedColorArray(0.0197667, 0.1, 0.017, 1, 0.006775, 0.05, 0.0045, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_drivo"]
+gradient = SubResource("Gradient_njbl0")
+fill_to = Vector2(0, 1)
 
 [node name="Main" type="Node3D"]
 
 [node name="CtrlQQuit" type="Node" parent="."]
 script = ExtResource("2_qfvl6")
 
-[node name="Grid" type="Node3D" parent="."]
-script = ExtResource("3_yqbrg")
-CellPrefab = ExtResource("4_fyu5t")
+[node name="PlayerController" type="Node3D" parent="."]
+script = ExtResource("2_6ldtj")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.208577, 0.978006, 0, -0.978006, 0.208577, 0, 3.78299, 0)
+[node name="UiContainer" type="HBoxContainer" parent="PlayerController"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 2
 
-[node name="Origin" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.999989, 0.00064444, -0.00460697, -0.000628405, 0.999994, 0.00348556, 0.00460919, -0.00348263, 0.999983, 0, 0, 0)
-mesh = SubResource("SphereMesh_a1nwy")
+[node name="SubViewportContainer" type="SubViewportContainer" parent="PlayerController/UiContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+stretch = true
 
-[node name="PlayerController" parent="." instance=ExtResource("4_q8v2a")]
+[node name="SubViewport" type="SubViewport" parent="PlayerController/UiContainer/SubViewportContainer"]
+unique_name_in_owner = true
+handle_input_locally = false
+size = Vector2i(864, 648)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="PlayerController/UiContainer/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 3, 5, 3)
+projection = 1
+current = true
+size = 13.0
+
+[node name="GameWorld" parent="PlayerController/UiContainer/SubViewportContainer/SubViewport" instance=ExtResource("3_pbppo")]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerController/UiContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="ReadMemory" type="PanelContainer" parent="PlayerController/UiContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_jxmpf")
+
+[node name="Background" type="TextureRect" parent="PlayerController/UiContainer/VBoxContainer/ReadMemory"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_drivo")
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerController/UiContainer/VBoxContainer/ReadMemory"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ReadMemoryText" type="RichTextLabel" parent="PlayerController/UiContainer/VBoxContainer/ReadMemory/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "NAME is GUARD_01
+DAMAGE is [XX...]
+ 
+PROCEDURE is
+[ ] SELECT $target
+  - enemy AND
+  - outside of cell
+[>] ATTACK $target
+ 
+MEMORY is
+- $target = ROBOT_1"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
+
+[node name="TurnTracker" type="PanelContainer" parent="PlayerController/UiContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_jxmpf")
+
+[node name="Background" type="TextureRect" parent="PlayerController/UiContainer/VBoxContainer/TurnTracker"]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_drivo")
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerController/UiContainer/VBoxContainer/TurnTracker"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="TurnTrackerText" type="RichTextLabel" parent="PlayerController/UiContainer/VBoxContainer/TurnTracker/MarginContainer"]
+layout_mode = 2
+text = "NAME is GUARD_01
+DAMAGE is [XX...]
+ 
+PROCEDURE is
+[ ] SELECT $target WHERE
+  - enemy AND
+  - outside of cell
+[>] ATTACK $target
+ 
+MEMORY is
+- $target = ROBOT_1"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false

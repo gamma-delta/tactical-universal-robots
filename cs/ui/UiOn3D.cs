@@ -23,11 +23,7 @@ public partial class UiOn3D : Control {
     };
 
     var unprojectedPos = camera.UnprojectPosition(parentPos);
-    var vpWindow = this.GetViewport() as Window;
-    var viewportBaseSize =
-      vpWindow.ContentScaleSize > Vector2I.Zero
-        ? vpWindow.ContentScaleSize
-        : vpWindow.Size;
+    var viewportBaseSize = this.GetViewport().GetVisibleRect().Size;
 
     // Never sticky
     this.Position = unprojectedPos;

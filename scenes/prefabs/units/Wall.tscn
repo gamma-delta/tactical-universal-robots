@@ -15,7 +15,6 @@ material = SubResource("StandardMaterial3D_6niko")
 
 [node name="Wall" type="Node3D"]
 script = ExtResource("1_p6efh")
-AlwaysSkipTurns = true
 Mind = SubResource("Resource_l08gd")
 
 [node name="SelectionReticle" type="MeshInstance3D" parent="."]
