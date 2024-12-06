@@ -15,4 +15,8 @@ public partial class Cell : Node3D {
   }
 
   public Unit? Unit { get => this.GetTypedChild<Unit>(); }
+
+  public void SetSelectMarker(bool it) {
+    this.GetNode<Sprite3D>("%SelectMarker").Visible = it;
+  }
 }

@@ -1,7 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://du1eftfb5gp70"]
+[gd_scene load_steps=13 format=3 uid="uid://du1eftfb5gp70"]
 
-[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_1j4pi"]
-[ext_resource type="Script" path="res://cs/ui/UiOn3D.cs" id="2_bo17j"]
+[ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_yb4op"]
+[ext_resource type="Script" path="res://cs/units/actions/PAFDoNothing.cs" id="2_7qt2d"]
+[ext_resource type="Script" path="res://cs/units/actions/PAFMoveTo.cs" id="3_m0djv"]
+[ext_resource type="Script" path="res://cs/units/MindPlayer.cs" id="4_ll4hs"]
+[ext_resource type="Script" path="res://cs/ui/UiOn3D.cs" id="5_c52ww"]
+
+[sub_resource type="Resource" id="Resource_qyw14"]
+script = ExtResource("2_7qt2d")
+
+[sub_resource type="Resource" id="Resource_lmcdl"]
+script = ExtResource("3_m0djv")
+
+[sub_resource type="Resource" id="Resource_a6irn"]
+resource_local_to_scene = true
+script = ExtResource("4_ll4hs")
+KnownActions = [SubResource("Resource_qyw14"), SubResource("Resource_lmcdl")]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wa77t"]
 albedo_color = Color(1, 1, 0.2, 1)
@@ -22,8 +36,9 @@ top_radius = 0.3
 bottom_radius = 0.3
 height = 1.5
 
-[node name="Player" type="Node3D"]
-script = ExtResource("1_1j4pi")
+[node name="RADIUS" type="Node3D"]
+script = ExtResource("1_yb4op")
+Mind = SubResource("Resource_a6irn")
 
 [node name="SelectionReticle" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
@@ -51,7 +66,7 @@ offset_right = -576.0
 offset_bottom = -324.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_bo17j")
+script = ExtResource("5_c52ww")
 
 [node name="Nameplate" type="PanelContainer" parent="Marker3D/UiOn3D"]
 layout_mode = 1

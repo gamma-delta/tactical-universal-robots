@@ -16,10 +16,8 @@ public partial class Unit : Node3D {
   /// Set this to true for walls and stuff
   [Export]
   public bool Inanimate = false;
-
-  /// A null mind means that the player controls it.
-  [Export(hintString: "A null mind means the player controls it")]
-  public Mind? Mind = null;
+  [Export]
+  public Mind Mind;
   
   public Vector2I GridPos { get => this.ParentCell.GridPos; }
   public Cell ParentCell { get => this.GetParent<Cell>(); }
@@ -37,9 +35,7 @@ public partial class Unit : Node3D {
   public override void _Process(double dt) {
     if (!this.Inanimate) {
       string s = this.Name;
-      if (this.Mind != null) {
-        s += "\n" + this.Mind.ShortDesc(this, The.Grid);
-      }
+      s += "\n" + this.Mind.ShortDesc(this, The.Grid);
       this.nameLabel.Text = s;
     }
   }
@@ -77,7 +73,7 @@ public partial class Unit : Node3D {
     bob.AppendLine("NAME is " + this.Name);
     bob.AppendLine("DAMAGE is [todo]");
 
-    if (this.Mind != null) this.Mind.LongDesc(this, The.Grid, bob);
+    this.Mind.LongDesc(this, The.Grid, bob);
 
     // For some reason two newlines displays some ghost character
     bob.Replace("\n\n", "\n \n");

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0dpqoyolebou"]
+[gd_scene load_steps=7 format=3 uid="uid://c0dpqoyolebou"]
 
 [ext_resource type="Script" path="res://cs/units/Unit.cs" id="1_p6efh"]
 [ext_resource type="Script" path="res://cs/units/MindMyLandlord.cs" id="2_yddce"]
@@ -12,6 +12,10 @@ roughness = 0.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_naiji"]
 material = SubResource("StandardMaterial3D_6niko")
+size = Vector3(1, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i1ioy"]
+size = Vector3(1, 2, 1)
 
 [node name="Wall" type="Node3D"]
 script = ExtResource("1_p6efh")
@@ -24,5 +28,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.19999, 0)
 visible = false
 
 [node name="Blocc" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("BoxMesh_naiji")
+
+[node name="GunRaycastBlocker" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GunRaycastBlocker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_i1ioy")

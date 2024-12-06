@@ -43,6 +43,14 @@ public static class Extensions {
     bob.Append(']');
     return bob.ToString();
   }
+
+  public static IEnumerable<(int, T)> Indexed<T>(this IEnumerable<T> iter) {
+    int i = 0;
+    foreach (T it in iter) {
+      yield return (i, it);
+      i++;
+    }
+  }
 }
 
 /// exact input

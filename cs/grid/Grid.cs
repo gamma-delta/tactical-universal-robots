@@ -43,9 +43,7 @@ public partial class Grid : Node3D {
           unit.Name = "GUARD_01";
           this.AddUnit(unit, new(x, y));
         } else if (x == 5 && y == 5) {
-          Unit unit = Extensions.LoadPrefab<Unit>("units/Player");
-          // No mind! player unit
-          unit.Name = "SHRED";
+          Unit unit = Extensions.LoadPrefab<Unit>("units/players/Radius");
           this.AddUnit(unit, new(x, y));
         } else if (x > 2 && x < 10 && y == 6) {
           Unit unit = Extensions.LoadPrefab<Unit>("units/Wall");
@@ -67,17 +65,17 @@ public partial class Grid : Node3D {
   public override void _Process(double dt) {
     if (this.TurnOrder.CurrentUnit() is Unit unit) {
       if (this.turnSequence == TurnSequence.JustStarted) {
-        if (unit.Mind is Mind mind) {
+        if (unit.Mind is MindPlayer) {
+          // Player controlled unit
+          GD.Print($"Making the player make a decision for {unit}");
+          The.PlayerController.BeginPlayerControlledTurn();
+          this.turnSequence = TurnSequence.WaitingToDecide;
+        } else {
           UnitAction decision = unit.Mind.Decide(unit, this);
           GD.Print($"Unit {unit} decided to {decision}");
           unit.FinishedWithTurn = false;
           decision.Perform(unit, this);
           this.turnSequence = TurnSequence.FinishingAction;
-        } else {
-          // Player controlled unit
-          GD.Print($"Making the player make a decision for {unit}");
-          The.PlayerController.BeginPlayerControlledTurn();
-          this.turnSequence = TurnSequence.WaitingToDecide;
         }
       }
       if (this.turnSequence == TurnSequence.WaitingToDecide) {
@@ -153,6 +151,20 @@ public partial class Grid : Node3D {
       pathfind = pathfind.Slice(0, unit.MoveDistance);
     }
     return (pathfind.ToList(), tooLong);
+  }
+
+  public List<Vector2I> CellsWithinRange(Vector2I origin, int dist) {
+    List<Vector2I> output = new();
+    for (int dx = -dist; dx <= dist; dx++) {
+      for (int dy = -dist; dy <= dist; dy++) {
+        Vector2I check = origin + new Vector2I(dx, dy);
+        var path = this.AStar.GetIdPath(origin, check);
+        if (path.Count != 0 && path.Count < dist) {
+          output.Add(check);
+        }
+      }
+    }
+    return output;
   }
 
   public static Vector3 GridPosToWorldPos(Vector2I pos) {

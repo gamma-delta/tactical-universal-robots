@@ -38,19 +38,29 @@ public partial class ProcedureMind : Mind {
       string desc = opc.LongDesc(unit, this, The.Grid);
       char sigil = i == this.Ip ? '>' : ' ';
 
-      bob.Append('[').Append(sigil).Append("] ").Append(opc);
+      bob.Append('[').Append(sigil).Append("] ").Append(desc);
       bob.AppendLine();
     }
 
-    bob.AppendLine("\nMEMORY is");
-    var sortedMem = this.Memory.OrderBy(kv => kv.Key);
-    foreach (var kv in sortedMem) {
-      if (kv.Value.VariantType != Variant.Type.Nil) {
-        bob.Append("- $")
-          .Append(kv.Key)
-          .Append(": ")
-          .Append(kv.Value.ToString());
-        bob.AppendLine();
+    if (this.Memory.Count == 0) {
+      bob.AppendLine("\nMEMORY is empty");
+    } else {
+      bob.AppendLine("\nMEMORY is");
+      var sortedMem = this.Memory.OrderBy(kv => kv.Key);
+      foreach (var kv in sortedMem) {
+        if (kv.Value.VariantType != Variant.Type.Nil) {
+          string s;
+          if (kv.Value.As<Node>() is Node n) {
+            s = n.Name;
+          } else {
+            s = kv.Value.ToString();
+          }
+          bob.Append("- $")
+            .Append(kv.Key)
+            .Append(": ")
+            .Append(s);
+          bob.AppendLine();
+        }
       }
     }
   }

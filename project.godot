@@ -55,3 +55,4 @@ tick={
 [layer_names]
 
 3d_physics/layer_1="GridRaycast"
+3d_physics/layer_2="GunRaycast"

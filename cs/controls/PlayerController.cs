@@ -14,6 +14,7 @@ using System.Linq;
 public partial class PlayerController : Node3D {
   private Cell? mouseoverCell = null;
   private Unit? selectedUnit = null;
+  private Unit? lastHoveredUnit = null;
 
   public bool PlayersTurn { get; private set; } = false;
 
@@ -28,9 +29,13 @@ public partial class PlayerController : Node3D {
   }
 
   public override void _Process(double dt) {
-    var rmt = this.GetNode<RichTextLabel>("%ReadMemoryText");
-    if (this.getMouseoverCell()?.Unit is Unit u) {
-      u.UpdateTerminal(rmt);
+    if (!GodotObject.IsInstanceValid(this.lastHoveredUnit))
+      this.lastHoveredUnit = null;
+    if (!GodotObject.IsInstanceValid(this.selectedUnit))
+      this.selectedUnit = null;
+
+    if (this.getMouseoverCell()?.Unit is Unit u && !u.Inanimate) {
+      this.lastHoveredUnit = u;
     }
   
     if (this.PlayersTurn && Input.IsActionJustPressed("command")) {
@@ -40,6 +45,8 @@ public partial class PlayerController : Node3D {
         this.playerDecision = new ActionMoveTo(end);
       }
     }
+
+    this.updateSidebars();
   }
 
   public override void _PhysicsProcess(double dt) {
@@ -89,5 +96,26 @@ public partial class PlayerController : Node3D {
     var camPoint = this.camera.Transform.Basis.GetRotationQuaternion()
       * Vector3.Forward;
     this.camera.Position = gridCenterReal - camPoint * 10;
+  }
+
+  private void updateSidebars() {
+    var rmt = this.GetNode<RichTextLabel>("%ReadMemoryText");
+    if (this.lastHoveredUnit is Unit u2) {
+      u2.UpdateTerminal(rmt);
+    }
+
+    var ttt = this.GetNode<RichTextLabel>("%TurnTrackerText");
+    StringBuilder bob = new();
+    var units = The.Grid.TurnOrder.Units();
+    foreach (var (i, unit) in The.Grid.TurnOrder.Units().Indexed()) {
+      char sigil = i == 0 ? '>' : ' ';
+      bob.Append('[')
+        .Append(sigil)
+        .Append("] ")
+        .Append(unit.Name)
+        .AppendLine();
+    }
+    ttt.Clear();
+    ttt.AddText(bob.ToString());
   }
 }

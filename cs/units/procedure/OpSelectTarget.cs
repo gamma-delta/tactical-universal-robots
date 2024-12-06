@@ -9,7 +9,8 @@ using Godot;
 
 public record OpSelectTarget : Opcode {
   public UnitAction Execute(Unit me, ProcedureMind mind, Grid grid) {
-    Unit? aPlayer = grid.GetUnits().First(u => u.Mind == null);
+    Unit? aPlayer = grid.GetUnits()
+      .FirstOrDefault(u => u.Mind is MindPlayer, null);
     mind.Memory["target"] = aPlayer;
     return new ActionDoNothing();
   }

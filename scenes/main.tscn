@@ -38,7 +38,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="PlayerController/UiContainer/SubViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-size = Vector2i(864, 648)
+size = Vector2i(2, 2)
 render_target_update_mode = 4
 
 [node name="Camera3D" type="Camera3D" parent="PlayerController/UiContainer/SubViewportContainer/SubViewport"]
@@ -74,17 +74,7 @@ theme_override_constants/margin_bottom = 20
 [node name="ReadMemoryText" type="RichTextLabel" parent="PlayerController/UiContainer/VBoxContainer/ReadMemory/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "NAME is GUARD_01
-DAMAGE is [XX...]
- 
-PROCEDURE is
-[ ] SELECT $target
-  - enemy AND
-  - outside of cell
-[>] ATTACK $target
- 
-MEMORY is
-- $target = ROBOT_1"
+text = "unit info"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -107,18 +97,9 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="TurnTrackerText" type="RichTextLabel" parent="PlayerController/UiContainer/VBoxContainer/TurnTracker/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "NAME is GUARD_01
-DAMAGE is [XX...]
- 
-PROCEDURE is
-[ ] SELECT $target WHERE
-  - enemy AND
-  - outside of cell
-[>] ATTACK $target
- 
-MEMORY is
-- $target = ROBOT_1"
+text = "turn order"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
